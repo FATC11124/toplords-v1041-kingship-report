@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Last War v1.0.41 王国官职系统 · 更新速查</title>
+<style>
+  :root{
+    --bg:#faf7f1;
+    --bg-alt:#f2ede2;
+    --card:#ffffff;
+    --ink:#1c2333;
+    --ink-2:#3d4657;
+    --muted:#7b7f8a;
+    --line:#e6dfd1;
+    --gold:#b8891f;
+    --gold-soft:#fdf6e3;
+    --red:#a3322f;
+    --red-soft:#fbeeec;
+    --green:#2f7a52;
+    --green-soft:#eef6f1;
+    --blue:#2f5d8a;
+    --blue-soft:#eef3f9;
+    --shadow:0 1px 2px rgba(28,35,51,.05),0 8px 24px -12px rgba(28,35,51,.14);
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;scroll-padding-top:96px;}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    font-size:15px;line-height:1.75;-webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:50;background:rgba(250,247,241,.86);
+    backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line);
+  }
+  .topbar-inner{
+    max-width:1080px;margin:0 auto;padding:12px 24px;
+    display:flex;align-items:center;gap:20px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;white-space:nowrap;}
+  .brand .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(184,137,31,.14);}
+  .nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;}
+  .nav::-webkit-scrollbar{display:none;}
+  .nav a{
+    font-size:13px;color:var(--muted);padding:5px 10px;border-radius:8px;white-space:nowrap;
+    transition:.15s;
+  }
+  .nav a:hover{background:var(--gold-soft);color:var(--gold);}
+
+  /* ---------- layout ---------- */
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px 80px;}
+
+  /* ---------- hero ---------- */
+  .hero{padding:56px 0 34px;border-bottom:1px solid var(--line);}
+  .kicker{
+    display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.12em;
+    color:var(--gold);text-transform:uppercase;font-weight:600;margin-bottom:16px;
+  }
+  .kicker::before{content:"";width:22px;height:1px;background:var(--gold);}
+  h1{
+    margin:0 0 14px;font-size:clamp(28px,4.4vw,42px);line-height:1.25;font-weight:800;
+    letter-spacing:-.01em;
+  }
+  h1 .ver{color:var(--gold);}
+  .lede{font-size:16px;color:var(--ink-2);max-width:760px;margin:0 0 22px;}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{
+    font-size:12.5px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);
+    background:var(--card);color:var(--muted);
+  }
+  .chip b{color:var(--ink-2);font-weight:600;}
+
+  /* ---------- stats ---------- */
+  .stats{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:12px;margin:28px 0 0;
+  }
+  .stat{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:16px 18px;box-shadow:var(--shadow);
+  }
+  .stat .n{font-size:26px;font-weight:800;line-height:1.1;letter-spacing:-.02em;}
+  .stat .l{font-size:12.5px;color:var(--muted);margin-top:4px;}
+  .stat.up .n{color:var(--red);}
+  .stat.down .n{color:var(--green);}
+  .stat.gold .n{color:var(--gold);}
+
+  /* ---------- section ---------- */
+  section{padding-top:52px;}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px;}
+  .sec-num{
+    font-size:12px;font-weight:700;color:var(--gold);border:1px solid rgba(184,137,31,.35);
+    background:var(--gold-soft);width:26px;height:26px;border-radius:8px;
+    display:inline-flex;align-items:center;justify-content:center;flex:none;
+    transform:translateY(-2px);
+  }
+  h2{margin:0;font-size:23px;font-weight:750;letter-spacing:-.01em;}
+  h3{
+    font-size:16px;font-weight:700;margin:32px 0 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  }
+  h3 .idx{color:var(--muted);font-weight:600;font-size:14px;}
+  p{margin:10px 0;}
+  .muted{color:var(--muted);}
+  .small{font-size:13px;}
+
+  /* ---------- tags ---------- */
+  .tag{
+    font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:6px;letter-spacing:.02em;
+    white-space:nowrap;
+  }
+  .tag.new{background:var(--red-soft);color:var(--red);}
+  .tag.del{background:var(--green-soft);color:var(--green);}
+  .tag.mod{background:var(--blue-soft);color:var(--blue);}
+  .tag.tbd{background:var(--bg-alt);color:var(--muted);}
+
+  /* ---------- card ---------- */
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px 24px;box-shadow:var(--shadow);
+  }
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+  /* ---------- table ---------- */
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow);}
+  table{border-collapse:collapse;width:100%;font-size:14px;min-width:520px;}
+  th,td{padding:11px 16px;text-align:left;border-bottom:1px solid var(--line);}
+  th{background:var(--bg-alt);font-size:12.5px;font-weight:650;color:var(--ink-2);letter-spacing:.02em;}
+  tbody tr:last-child td{border-bottom:none;}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:650;}
+  td.mid{text-align:center;}
+  .d-up{color:var(--red);font-weight:700;}
+  .d-new{color:var(--red);font-size:12px;font-weight:700;background:var(--red-soft);padding:1px 7px;border-radius:5px;}
+  .d-none{color:var(--muted);}
+
+  /* ---------- list ---------- */
+  ul.clean{margin:10px 0;padding-left:0;list-style:none;}
+  ul.clean li{
+    position:relative;padding-left:20px;margin:9px 0;color:var(--ink-2);
+  }
+  ul.clean li::before{
+    content:"";position:absolute;left:4px;top:.72em;width:6px;height:6px;border-radius:50%;
+    background:var(--gold);opacity:.65;
+  }
+  ul.clean li b{color:var(--ink);font-weight:650;}
+
+  /* ---------- card figure ---------- */
+  .cards-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin:20px 0;}
+  figure{margin:0;text-align:center;}
+  figure img{
+    width:100%;max-width:260px;border-radius:12px;display:block;margin:0 auto;
+    border:1px solid var(--line);background:var(--card);
+    box-shadow:0 10px 28px -14px rgba(28,35,51,.35);
+  }
+  figcaption{font-size:12.5px;color:var(--muted);margin-top:10px;}
+  figcaption b{color:var(--ink-2);}
+
+  /* ---------- skill cards ---------- */
+  .skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin:16px 0;}
+  .skill{
+    background:var(--card);border:1px solid var(--line);border-left:3px solid var(--gold);
+    border-radius:12px;padding:16px 18px;box-shadow:var(--shadow);
+  }
+  .skill h4{margin:0 0 6px;font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;}
+  .skill p{margin:0;font-size:13.5px;color:var(--ink-2);}
+  .skill .eff{
+    display:inline-block;margin-top:8px;font-size:12.5px;background:var(--red-soft);color:var(--red);
+    padding:2px 9px;border-radius:6px;font-weight:650;
+  }
+
+  /* ---------- pills row ---------- */
+  .pills{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;}
+  .pill{
+    font-size:13px;padding:6px 13px;border-radius:999px;background:var(--card);
+    border:1px solid var(--line);box-shadow:var(--shadow);
+  }
+  .pill.del{background:var(--green-soft);border-color:#d8ebdf;color:var(--green);text-decoration:line-through;text-decoration-thickness:1.5px;}
+
+  /* ---------- warning ---------- */
+  .warn{
+    background:#fffdf5;border:1px solid #efe2bd;border-left:3px solid var(--gold);
+    border-radius:12px;padding:16px 18px;margin:14px 0;
+  }
+  .warn h4{margin:0 0 6px;font-size:14.5px;font-weight:700;}
+  .warn p{margin:0;font-size:13.5px;color:var(--ink-2);}
+  .warn .ico{color:var(--gold);margin-right:6px;}
+
+  /* ---------- callout ---------- */
+  .note{
+    background:var(--blue-soft);border:1px solid #dae5f1;border-radius:10px;
+    padding:12px 16px;font-size:13.5px;color:#2c4a6b;margin:14px 0;
+  }
+  .note b{color:#1e3a5c;}
+
+  /* ---------- footer ---------- */
+  footer{
+    margin-top:64px;padding-top:24px;border-top:1px solid var(--line);
+    font-size:12.5px;color:var(--muted);
+  }
+  footer p{margin:4px 0;}
+
+  @media(max-width:720px){
+    .wrap{padding:0 18px 60px;}
+    .topbar-inner{padding:10px 18px;}
+    .grid-2{grid-template-columns:1fr;}
+    .hero{padding:38px 0 26px;}
+    section{padding-top:40px;}
+    .card{padding:18px 16px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="dot"></span>LW v1.0.41 · 王国官职系统</div>
+    <nav class="nav">
+      <a href="#s1">1 官职调整</a>
+      <a href="#s2">2 增益修改</a>
+      <a href="#s3">3 官职权益</a>
+      <a href="#s4">4 王国法令</a>
+      <a href="#s5">5 国王技能</a>
+      <a href="#s6">6 国王嘉奖</a>
+      <a href="#s7">7 王国资金</a>
+      <a href="#s8">8 更新须知</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="kicker">Version Update · 王国官职系统</div>
+    <h1>Last War <span class="ver">v1.0.41</span><br>王国官职系统 更新速查</h1>
+    <p class="lede">
+      本次更新重做了整套王国官职体系：新增「护国公」官职、删除 4 个旧官职与「首相敕书」，
+      上调国王与首相增益，并首次引入<b>王国惩戒、王国法令、国王技能、国王嘉奖、王国资金</b>五大新玩法。
+      无论你是统领王国的国王，还是为王国奋战的一员，这些变化都与你息息相关。
+    </p>
+    <div class="meta">
+      <span class="chip">来源 <b>Discord 公告频道</b></span>
+      <span class="chip">发布 <b>GM Mulan</b></span>
+      <span class="chip">日期 <b>2026-10-21 11:29</b></span>
+      <span class="chip">原文 <b>8 个章节</b></span>
+    </div>
+
+    <div class="stats">
+      <div class="stat up"><div class="n">+1</div><div class="l">新增官职 · 护国公</div></div>
+      <div class="stat down"><div class="n">-4</div><div class="l">删除官职</div></div>
+      <div class="stat up"><div class="n">+3</div><div class="l">新增王国法令</div></div>
+      <div class="stat up"><div class="n">+5</div><div class="l">新增国王技能</div></div>
+      <div class="stat up"><div class="n">+7</div><div class="l">新增王国惩戒</div></div>
+      <div class="stat gold"><div class="n">200万</div><div class="l">全王国发放资金</div></div>
+    </div>
+  </header>
+
+  <!-- ============ 1 ============ -->
+  <section id="s1">
+    <div class="sec-head"><span class="sec-num">1</span><h2>官职调整</h2></div>
+
+    <h3><span class="idx">1.1</span> 新增官职：护国公 <span class="tag new">新增</span></h3>
+    <p>护国公为本次新增官职，增益结构与调整后的国王完全一致——英雄三维 +5%，建造 / 研究 +50%，训练 / 治疗 +20%。</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th style="width:42%">官职增益</th><th class="num" style="text-align:right">数值</th></tr></thead>
+        <tbody>
+          <tr><td>英雄生命</td><td class="num">+5.00%</td></tr>
+          <tr><td>英雄攻击</td><td class="num">+5.00%</td></tr>
+          <tr><td>提升英雄防御</td><td class="num">+5.00%</td></tr>
+          <tr><td>建造速度</td><td class="num">+50.00%</td></tr>
+          <tr><td>研究速度</td><td class="num">+50.00%</td></tr>
+          <tr><td>训练速度提升</td><td class="num">+20.00%</td></tr>
+          <tr><td>治疗伤兵速度</td><td class="num">+20.00%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3><span class="idx">1.2</span> 删除官职 <span class="tag del">移除</span></h3>
+    <p>以下 4 个官职被整体删除，相关任命与增益不再存在：</p>
+    <div class="pills">
+      <span class="pill del">大元帅</span>
+      <span class="pill del">大总管</span>
+      <span class="pill del">医务大臣</span>
+      <span class="pill del">财务大臣</span>
+    </div>
+
+    <h3><span class="idx">1.3</span> 删除首相敕书 <span class="tag del">移除</span></h3>
+    <p>领主们将<b>无法再申请首相敕书</b>。首相一职的进入路径改为国王授权体系（详见 3.2）。</p>
+  </section>
+
+  <!-- ============ 2 ============ -->
+  <section id="s2">
+    <div class="sec-head"><span class="sec-num">2</span><h2>官职增益修改</h2></div>
+
+    <h3><span class="idx">2.1</span> 国王增益 <span class="tag mod">上调</span></h3>
+    <p>调整前国王仅有英雄三维 +5%；调整后在保留三维的同时，<b>一次性补齐建造、研究、训练、治疗四项</b>，与护国公同档。</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th style="width:38%">增益项</th><th class="num" style="text-align:right">调整前</th><th class="num" style="text-align:right">调整后</th><th class="mid" style="width:76px">变化</th></tr></thead>
+        <tbody>
+          <tr><td>英雄生命</td><td class="num d-none">+5%</td><td class="num">+5.00%</td><td class="mid d-none">—</td></tr>
+          <tr><td>英雄攻击</td><td class="num d-none">+5%</td><td class="num">+5.00%</td><td class="mid d-none">—</td></tr>
+          <tr><td>英雄防御</td><td class="num d-none">+5%</td><td class="num">+5.00%</td><td class="mid d-none">—</td></tr>
+          <tr><td>建造速度</td><td class="num d-none">—</td><td class="num d-up">+50.00%</td><td class="mid"><span class="d-new">新增</span></td></tr>
+          <tr><td>研究速度</td><td class="num d-none">—</td><td class="num d-up">+50.00%</td><td class="mid"><span class="d-new">新增</span></td></tr>
+          <tr><td>训练速度</td><td class="num d-none">—</td><td class="num d-up">+20.00%</td><td class="mid"><span class="d-new">新增</span></td></tr>
+          <tr><td>治疗伤兵速度</td><td class="num d-none">—</td><td class="num d-up">+20.00%</td><td class="mid"><span class="d-new">新增</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3><span class="idx">2.2</span> 首相增益 <span class="tag mod">上调</span></h3>
+    <p>三项旧增益全部翻倍以上，并新增治疗伤兵速度 +20%。</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th style="width:38%">增益项</th><th class="num" style="text-align:right">调整前</th><th class="num" style="text-align:right">调整后</th><th class="mid" style="width:76px">变化</th></tr></thead>
+        <tbody>
+          <tr><td>建造速度</td><td class="num d-none">+20%</td><td class="num d-up">+50.00%</td><td class="mid d-up">+30pt</td></tr>
+          <tr><td>研究速度</td><td class="num d-none">+20%</td><td class="num d-up">+50.00%</td><td class="mid d-up">+30pt</td></tr>
+          <tr><td>训练速度</td><td class="num d-none">+10%</td><td class="num d-up">+20.00%</td><td class="mid d-up">+10pt</td></tr>
+          <tr><td>治疗伤兵速度</td><td class="num d-none">—</td><td class="num d-up">+20.00%</td><td class="mid"><span class="d-new">新增</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3><span class="idx">2.3</span> 新增王国惩戒 <span class="tag new">新玩法</span></h3>
+    <p>国王或首相可向王国内领主施加王国惩戒，被施加的领主将受到负面效果。共 7 种，命名对应七宗罪：</p>
+    <div class="pills">
+      <span class="pill">傲慢之刺</span><span class="pill">嫉妒之刺</span><span class="pill">暴怒之刺</span>
+      <span class="pill">懒惰之刺</span><span class="pill">贪婪之刺</span><span class="pill">暴食之刺</span>
+      <span class="pill">色欲之刺</span>
+    </div>
+    <div class="note"><b>数值待确认：</b>公告仅说明“受到负面效果”，未公布每种「刺」的具体惩罚数值、持续时间与冷却。</div>
+
+    <div class="cards-3">
+      <figure>
+        <img src="assets/card-king.png" alt="国王官职任命面板">
+        <figcaption><b>国王</b> · 调整后增益面板</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/card-chancellor.png" alt="首相官职任命面板">
+        <figcaption><b>首相</b> · 调整后增益面板</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/card-duke.png" alt="护国公官职任命面板">
+        <figcaption><b>护国公</b> · 新增官职增益面板</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ 3 ============ -->
+  <section id="s3">
+    <div class="sec-head"><span class="sec-num">3</span><h2>新增官职权益</h2></div>
+
+    <h3><span class="idx">3.1</span> 国王权益</h3>
+    <div class="card">
+      <ul class="clean">
+        <li>国王在王国领土内进行<b>高级迁城</b>时，将不再消耗「高级迁城」道具</li>
+        <li>国王可<b>颁布王国法令</b></li>
+        <li>国王可<b>使用国王技能</b></li>
+        <li>国王可向王国内<b>非自己同盟</b>的领主进行<b>征税</b></li>
+      </ul>
+    </div>
+
+    <h3><span class="idx">3.2</span> 首相权益</h3>
+    <div class="card">
+      <ul class="clean">
+        <li>经<b>国王授权</b>后，首相可颁布王国法令</li>
+        <li>经<b>国王授权</b>后，首相可使用国王技能</li>
+      </ul>
+      <p class="small muted" style="margin-bottom:0">即：首相的所有新权益都以国王授权为前提，无法自行启用。</p>
+    </div>
+  </section>
+
+  <!-- ============ 4 ============ -->
+  <section id="s4">
+    <div class="sec-head"><span class="sec-num">4</span><h2>王国法令</h2></div>
+
+    <h3><span class="idx">4.1</span> 新增王国法令 <span class="tag new">新玩法</span></h3>
+    <div class="grid-2">
+      <div class="card">
+        <h4 style="margin:0 0 6px;font-size:15px;">王国停战令</h4>
+        <p class="small muted" style="margin:0">王国成员不可攻击对方城堡。</p>
+      </div>
+      <div class="card">
+        <h4 style="margin:0 0 6px;font-size:15px;">贸易保护令</h4>
+        <p class="small muted" style="margin:0">王国成员之间不可掠夺对方贸易马车。</p>
+      </div>
+      <div class="card">
+        <h4 style="margin:0 0 6px;font-size:15px;">悬赏保护令</h4>
+        <p class="small muted" style="margin:0">王国成员之间不可掠夺对方悬赏任务。</p>
+      </div>
+    </div>
+
+    <h3><span class="idx">4.2</span> 王国法令规则</h3>
+    <div class="card">
+      <ul class="clean">
+        <li>国王或首相在颁布法令后，王国内领主<b>需遵守</b>相关法令条例</li>
+        <li>但领主<b>仍可进行</b>被法令限制的行为</li>
+        <li>领主违反王国法令时将<b>收到提示</b>，且违规行为<b>会被记录</b></li>
+        <li>颁布前，国王或首相可编辑法令<b>生效范围</b>：包括同盟战力排名范围与王国成员城堡位置</li>
+        <li>法令颁布后可随时取消，但被取消或<b>到期后将进入 24 小时冷却期</b></li>
+      </ul>
+      <div class="note" style="margin-bottom:0">
+        <b>要点：</b>法令是「软约束」——不禁止操作，只做提示 + 记录。落地效果取决于王国内部的执行力与追责机制。
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5 ============ -->
+  <section id="s5">
+    <div class="sec-head"><span class="sec-num">5</span><h2>国王技能</h2></div>
+
+    <h3><span class="idx">5.1</span> 新增国王技能 <span class="tag new">新玩法</span></h3>
+    <div class="skills">
+      <div class="skill">
+        <h4>皇家花车</h4>
+        <p>国王或首相选择一名王国成员作为同行者后可释放，释放后发出一辆「皇家花车」。</p>
+        <span class="eff">每被点赞 20 次 → 爆出花车宝箱，王国成员可领取奖励</span>
+      </div>
+      <div class="skill">
+        <h4>皇家贸易马车</h4>
+        <p>释放后，王国内所有成员未来刷新的 4 辆马车，将晋升为「皇家贸易马车」。</p>
+        <span class="eff">更丰富的马车奖励 · 覆盖全员</span>
+      </div>
+      <div class="skill">
+        <h4>皇家采集点</h4>
+        <p>释放后，王城周围将生成大量「皇家采集点」。</p>
+        <span class="eff">在皇家采集点采集时拥有更快的采集速度</span>
+      </div>
+      <div class="skill">
+        <h4>战争动员</h4>
+        <p>释放后，王国内所有成员将获得增益：</p>
+        <span class="eff">训练速度 +2.5% ／ 治疗速度 +2.5%</span>
+      </div>
+      <div class="skill">
+        <h4>王国通缉</h4>
+        <p>国王或首相选择一名王国成员作为「通缉者」后可释放。</p>
+        <span class="eff">被通缉者无法开盾、无法主动迁城，持续 5 分钟</span>
+      </div>
+    </div>
+
+    <h3><span class="idx">5.2</span> 国王技能释放条件</h3>
+    <div class="card">
+      <ul class="clean">
+        <li>使用国王技能需要消耗<b>王国资金</b></li>
+        <li>每项国王技能<b>每周只能释放一次</b></li>
+        <li>每周一<b>服务器时间 00:00:00</b> 重置国王技能释放次数</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 6 ============ -->
+  <section id="s6">
+    <div class="sec-head"><span class="sec-num">6</span><h2>国王嘉奖修改</h2></div>
+
+    <h3><span class="idx">6.1</span> 国王嘉奖类型 <span class="tag mod">修改</span></h3>
+    <div class="pills">
+      <span class="pill">士兵嘉奖</span>
+      <span class="pill">骑士嘉奖</span>
+      <span class="pill">统领嘉奖</span>
+      <span class="pill">元帅嘉奖</span>
+    </div>
+
+    <h3><span class="idx">6.2</span> 国王嘉奖规则</h3>
+    <div class="card">
+      <ul class="clean">
+        <li>国王嘉奖需要消耗<b>王国资金</b>，由国王购买后发放给指定领主；<b>不同嘉奖类型消耗的王国资金数量不同</b></li>
+        <li>每名领主<b>每周只能获得 1 次嘉奖</b></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 7 ============ -->
+  <section id="s7">
+    <div class="sec-head"><span class="sec-num">7</span><h2>王国资金</h2></div>
+
+    <h3><span class="idx">7.1</span> 王国资金获取途径</h3>
+    <div class="grid-2">
+      <div class="card">
+        <h4 style="margin:0 0 8px;font-size:15px;">城市征税</h4>
+        <p class="small muted" style="margin:0">
+          王国内各等级城市的城主或骑士在进行征税后，由税金转化的<b>城市资金</b>，也将转化为对应的<b>王国资金</b>。
+        </p>
+      </div>
+      <div class="card">
+        <h4 style="margin:0 0 8px;font-size:15px;">城市任务</h4>
+        <p class="small muted" style="margin:0">
+          王国内各领主完成城市任务后，为对应城市积累的<b>城市资金</b>，也将转化为对应的<b>王国资金</b>。
+        </p>
+      </div>
+    </div>
+    <div class="note">
+      <b>注意：</b>城市资金的增加将同步计入王国资金，<b>城市资金本身不会受到任何影响或改变</b>——即王国资金是“附加产出”，不挪用城市资金池。
+    </div>
+  </section>
+
+  <!-- ============ 8 ============ -->
+  <section id="s8">
+    <div class="sec-head"><span class="sec-num">8</span><h2>更新须知</h2></div>
+    <p class="muted">请各位领主留意以下更新事项：</p>
+
+    <div class="warn">
+      <h4><span class="ico">●</span>官职重置</h4>
+      <p>停服更新时，<b>除国王外</b>，所有王国官职均将被卸任。更新完成后，领主需重新申请。</p>
+    </div>
+    <div class="warn">
+      <h4><span class="ico">●</span>官职外观清除</h4>
+      <p>停服更新时，官职对应的<b>头像框、称号、访客</b>将同步被清除。</p>
+    </div>
+    <div class="warn">
+      <h4><span class="ico">●</span>王国资金发放</h4>
+      <p>停服更新完成后，<b>所有王国将获得 2,000,000 王国资金</b>。</p>
+    </div>
+  </section>
+
+  <footer>
+    <p><b>资料来源：</b>Discord 公告频道 · GM Mulan，2026-10-21 11:29–11:37，共 8 个章节 + 3 张游戏内「任命」面板截图。</p>
+    <p><b>说明：</b>本页为公告内容的整理速查版，非官方文档。所有数值以游戏内实际显示为准；标「数值待确认」处为公告未披露项。</p>
+    <p>整理时间：2026-10-29</p>
+  </footer>
+
+</div>
+</body>
+</html>
